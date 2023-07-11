@@ -67,7 +67,7 @@ function paginationBar(pages) {
 
     for (let i = 1; i < lis.length - 1; i++) {
         lis[i].addEventListener('click', () => {
-            const url = `https://api.jikan.moe/v4/anime?q=${anime}&page=${i}&sfw`;
+            const url = `https://api.jikan.moe/v4/anime?q=${anime}&page=${i}`;
             resourceFetch(url).then((data)=>{
                 showResultSet(data);
             });

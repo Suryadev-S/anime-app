@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- <script src="script.js" defer></script> -->
+</head>
+<body>
+    <header>
+        <h1>sanime</h1>
+        <input type="text" name="" id="" placeholder="Search anime..">
+        <button>Search</button>
+    </header>
+    <main>
+        <div class="container">
+            <div class="current">
+                <% for(let i=0; i<dataArray.length; i++) { %>
+                    <div class="card">
+                        <div class="posterBox">
+                            <p id="score"><%= dataArray[i].score %></p>
+                            <div class="glass"></div>
+                            <img src= "<%=dataArray[i].images.jpg.image_url%>" alt="" srcset="">
+                        </div>
+            
+                        <div class="contentBox">
+                            <p><%=dataArray[i].title%></p>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+            <div id="pagination">
+                <ul>
+                    <li id="prev">Prev</li>
+                    <li class="active">1</li>
+                    <% for(let i = 1; i < pages.last_visible_page; i++ ){ %>
+                        <li> <%= i+1 %> </li>
+                    <% } %>
+                    <li id="next">Next</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer> 
+        <p>made with love by suryadev s</p>
+    </footer>
+
+    <script>
+        const current = document.querySelector(".current");
+        const lis = document.querySelectorAll('li');
+        for (let i = 1; i < lis.length - 1; i++) {
+            lis[i].addEventListener('click', () => {
+                const url = `https://api.jikan.moe/v4/seasons/now?page=${i}`;
+                resourceFetch(url).then((data)=>{
+                    showResultSet(data);
+                });
+                lis.forEach((i) => {
+                    i.classList.remove('active');
+                })
+                lis[i].classList.add('active');
+            })
+        }
+
+        function showResultSet(data) {
+            current.innerHTML = '';
+            const dataArray = data['data'];
+            for (let i = 0; i < dataArray.length; i++) {
+                const listItem = document.createElement('div');
+                listItem.classList.add('card');
+                listItem.innerHTML = `
+                    <div class="posterBox">
+                        <p id="score">${dataArray[i].score}</p>
+                        <div class="glass"></div>
+                        <img src="${dataArray[i].images.jpg.image_url}" alt="" srcset="">
+                    </div>
+
+                    <div class="contentBox">
+                        <p>${dataArray[i].title}</p>
+                    </div>`;
+                current.appendChild(listItem);
+            }
+        }
+
+        async function resourceFetch(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+            return data; //which itself is a promise which is handled in the 'then' block
+        }
+    </script>
+</body>
+</html>

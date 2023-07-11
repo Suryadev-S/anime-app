@@ -46,7 +46,7 @@ footer{
     padding: 50px 500px;
 }
 
-.searchList{
+.searchList,.current{
     display: flex;
     flex-wrap: wrap;
     gap: 2em;

@@ -1,5 +1,6 @@
 const path = require("path");
 const express = require("express");
+const axios = require('axios');
 
 const app = express();
 
@@ -10,9 +11,18 @@ app.use(express.static('public'));
 app.set('views',path.join(__dirname,'views'));
 app.set('view engine','ejs');
 
+async function returnObject(object){
+    return await object.json;
+}
+
 //routes
 app.get("/",(req,res)=>{
-    res.render('Home');
+    let data;
+    axios.get('https://api.jikan.moe/v4/seasons/now').then((response)=>{
+        let dataObject = response.data; 
+        // console.log(response.data);
+        res.render('current',{dataArray: dataObject.data,pages: dataObject.pagination});
+    })
 })
 
 
